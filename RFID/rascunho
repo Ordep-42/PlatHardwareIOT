@@ -1,0 +1,39 @@
+#Prática comunicação serial com Arduino Uno
+
+#Comunicação SPI:
+-> serial;
+-> síncrona;
+-> Mestre-Escravo;
+-> 3 pinos + nº de escarvos;
+-> Master In Slave Out (MISO);
+-> Master Out Slave In (MOSI);
+-> Serial Clock (SLK ou SCK ou SCLK);
+-> Chip Select ou Slave Select (CS SS).
+
+#Módulo RFID MFRC522:
+-> Tensão Operação 2.5 a 3.3v;
+-> Corrente Operação 13mA a 26mA;
+-> Distância Mínima 50mm;
+-> Frequência Operação 13.56MHz;
+-> Protocolo I²C, SPI e UART;
+-> I²C: SDA SCL;
+-> UART: RX TX;
+-> SPI: CS, MISO, SCK, MOSI: 10, 11, 12, 13 no Arduino UNO;
+-> IRQ (Hardware Interrupt);
+-> RST (reset do módulo): 9 no Arduino UNO;
+
+#Objetivo da Prática:
+Simular controle de acesso com o módulo RFID, utilizando 2 LEDs e 1 Buzzer.
+Um dos LEDs é vermelho e ficará inicialmente aceso. Ao aproximar uma tag
+previamente cadastrada, apague o LED vermelho, acenda um LED verde por 10
+segundos e mostre na tela "Acesso liberado".
+Caso a tag não esteja cadastrada, mostre a mensagem "cartão inválido"
+e pisque o LED vermelho algumas 3 vezes.
+Em caso de inserir por 5 vezes uma tag não cadastrada, imprima a mensagem
+"SISTEMA BLOQUEADO", o LED vermelho ficará piscando e o Buzzer será acionado
+por 30 segundos.
+
+UID da Tag autorizada: E3 38 63 0D
+UID da Tag não-autorizada: 15 6B 7F 63
+
+
