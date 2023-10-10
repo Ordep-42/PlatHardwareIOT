@@ -1,0 +1,48 @@
+//touch basico
+
+#include <Arduino.h>
+
+void setup()
+{
+  Serial.begin(9600);
+  delay(1000);
+  Serial.println("ESP32 touch test");
+}
+
+void loop()
+{
+  Serial.print("Touch: ");
+  Serial.println(touchRead(4)); 
+  delay(1000);
+}
+
+--------------------
+
+//led sem delay
+
+#include <Arduino.h>
+
+#define LED_PIN 2
+#define BLINK_INTERVAL 250
+
+int ledState = LOW;
+
+unsigned long previousMillis = 0;
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop()
+{
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= BLINK_INTERVAL)
+  {
+    digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+    previousMillis = currentMillis;
+  }
+}
+
