@@ -29,6 +29,7 @@ void loop() {
     if (sensorVal != oldSensorVal) {
     Serial.print("Master sent: ");
     Serial.println(sensorVal);
+    Serial.println(buttonVal);
 
     ledVal = map(sensorVal, 511, 0, 0, 255);
     if (ledVal < 0){
@@ -41,7 +42,7 @@ void loop() {
     analogWrite(12, ledVal);
 
     oldSensorVal = sensorVal;
-    }
+    }  
   }
 }
 
@@ -55,10 +56,13 @@ void readMasterPort() {
   }
   int separador = msg.indexOf("*");
   for (int i = 0; i < msg.length(); i++) {
+    Serial.print("caractere atual ");
     if (i < separador) {
       sensor += msg[i];
+      Serial.println(msg[i]);
     } else if (i > separador) {
       button += msg[i];
+      Serial.println(msg[i]);
     }
   }
 
@@ -67,8 +71,12 @@ void readMasterPort() {
 
 void convertMsgToCmd() {
   if (msg.length() > 0) {
-    char sensorArray[3];
-    char buttonChar[1];
+    char sensorArray[4];
+    char buttonChar[2];
+    Serial.print("Strings ");
+    Serial.print(sensor);
+    Serial.print(", ");
+    Serial.println(button);
     sensor.toCharArray(sensorArray, sizeof(sensorArray));
     button.toCharArray(buttonChar, sizeof(buttonChar));
     sensorVal = atoi(sensorArray);

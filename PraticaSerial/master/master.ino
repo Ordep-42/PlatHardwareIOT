@@ -31,7 +31,7 @@ void loop() {
     Serial.print("Master sent: ");
     Serial.println(msg);
     ArduinoSlave.print(msg);
-    if (sensorValue < 20) {
+    if (sensorValue < 50) {
       Serial.println("Baixa luminosidade!");
     }
     oldSensorValue = sensorValue;
@@ -39,7 +39,7 @@ void loop() {
   }
 
   if (answer != "") {
-    Serial.print("Slave LED PWM Value: ");
+    Serial.print("Luminosidade do LED");
     Serial.println(answer);
     answer = "";
   }
