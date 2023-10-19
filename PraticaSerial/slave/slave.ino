@@ -5,9 +5,12 @@
 SoftwareSerial ArduinoMaster(10, 11);
 
 String msg = ""; 
+String sensor = "";
+String button = "";
 
 int ledVal = 0;
 int sensorVal = 0, oldSensorVal = 0;
+int buttonVal = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -19,7 +22,11 @@ void loop() {
   readMasterPort();
   convertMsgToCmd();
 
-  if (sensorVal != oldSensorVal) {
+  
+  if (buttonVal == 1) {
+    digitalWrite(12, 1);
+  } else {
+    if (sensorVal != oldSensorVal) {
     Serial.print("Master sent: ");
     Serial.println(sensorVal);
 
@@ -31,10 +38,10 @@ void loop() {
     Serial.print("LED Value: ");
     Serial.println(ledVal);
     ArduinoMaster.print(ledVal);
-    analogWrite(12
-  , ledVal);
+    analogWrite(12, ledVal);
 
     oldSensorVal = sensorVal;
+    }
   }
 }
 
@@ -46,17 +53,29 @@ void readMasterPort() {
       msg += c;
     }
   }
+  int separador = msg.indexOf("*");
+  for (int i = 0; i < msg.length(); i++) {
+    if (i < separador) {
+      sensor += msg[i];
+    } else if (i > separador) {
+      button += msg[i];
+    }
+  }
+
   ArduinoMaster.flush();
 }
 
 void convertMsgToCmd() {
   if (msg.length() > 0) {
-    Serial.print("message length: ");
-    Serial.println(msg.length());
+    char sensorArray[3];
+    char buttonChar[1];
+    sensor.toCharArray(sensorArray, sizeof(sensorArray));
+    button.toCharArray(buttonChar, sizeof(buttonChar));
+    sensorVal = atoi(sensorArray);
+    buttonVal = atoi(buttonChar);
 
-    char carray[6];
-    msg.toCharArray(carray, sizeof(carray));
-    sensorVal = atoi(carray);
     msg = "";
+    sensor = "";
+    button = "";
   }
 }
