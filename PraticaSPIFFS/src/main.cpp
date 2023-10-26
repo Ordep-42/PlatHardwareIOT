@@ -16,17 +16,17 @@ String s;
 
 int botaoVal, ledVal = 0, oldVal = 0, oldLedVal;
 
-void writeFile(String state, String path) { //escreve conteúdo em um arquivo
-  File rFile = SPIFFS.open(path, "w");//a para anexar
+WiFiUDP udp;
+NTPClient ntp(udp);/* Cria um objeto "NTP" com as configurações.utilizada no Brasil */
+String data;
+
+void writeFile(String state, String path, char format[]) { //escreve conteúdo em um arquivo
+  File rFile = SPIFFS.open(path, format);//a para anexar
   if (!rFile) {
     Serial.println("Erro ao abrir arquivo!");
   }
   else {
-    Serial.print("tamanho ");
-    Serial.println(rFile.size());
     rFile.println(state);
-    Serial.print("Gravou: ");
-    Serial.println(state);
   }
   rFile.close();
 }
@@ -38,9 +38,6 @@ String readFile(String path) {
     Serial.println("Erro ao abrir arquivo!");
   }
   else {
-    Serial.print("----------Lendo arquivo ");
-    Serial.print(path);
-    Serial.println("  ---------");
     while (rFile.position() < rFile.size())
     {
       s = rFile.readStringUntil('\n');
@@ -78,6 +75,9 @@ void setup() {
   }
   Serial.println("Conectado"); /* Conectado */
   delay(200);
+  ntp.begin();               /* Inicia o protocolo */
+  ntp.forceUpdate();    /* Atualização */
+  ntp.setTimeOffset(-10800);
   //formatFile();
   openFS(); 
   String s = readFile("/ledState.txt");
@@ -91,9 +91,13 @@ void loop() {
     ledVal = (ledVal == LOW ? HIGH : LOW);
     digitalWrite(LED, ledVal);
     delay(50);
+    data = ntp.getFormattedDate();
+    writeFile(data, "/ledLog.txt", "a+");
   }
   oldVal = botaoVal;
   delay(100);
   str = String(ledVal);
-  writeFile(str, "/ledState.txt");
+  writeFile(str, "/ledState.txt", "w+");
+  Serial.println(readFile("/ledLog.txt"));
+  delay(250);
 }
