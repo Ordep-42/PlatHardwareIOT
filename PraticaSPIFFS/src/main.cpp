@@ -2,19 +2,27 @@
 
 #include <FS.h>
 #include "SPIFFS.h"
+#include <WiFi.h>
+#include <NTPClient.h>
 
-int num=0;
+#define LED 2
+#define botao 4
+
+const char* ssid = "NPITI-IoT";
+const char* password =  "NPITI-IoT"; 
+
 String str;
 String s;
 
+int botaoVal, ledVal = 0, oldVal = 0, oldLedVal;
 
 void writeFile(String state, String path) { //escreve conteúdo em um arquivo
-  File rFile = SPIFFS.open(path, "a");//a para anexar
+  File rFile = SPIFFS.open(path, "w");//a para anexar
   if (!rFile) {
     Serial.println("Erro ao abrir arquivo!");
   }
   else {
-    Serial.print("tamanho");
+    Serial.print("tamanho ");
     Serial.println(rFile.size());
     rFile.println(state);
     Serial.print("Gravou: ");
@@ -60,20 +68,32 @@ void openFS(void) {
 }
 
 void setup() {
+  pinMode(botao, INPUT_PULLUP);
+  pinMode(LED, OUTPUT);
   Serial.begin(115200);
-  Serial.println("inicio");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);                                 /* Aguarda meio segundo */
+    Serial.println(WiFi.status());     /* Conectando */
+  }
+  Serial.println("Conectado"); /* Conectado */
   delay(200);
   //formatFile();
-  Serial.println("abrir arquivo");
   openFS(); 
-  num = random(5000);//gerando numero aleatorio para salvar no arquivo
-  str = String(num);//convertendo o int para String
-  writeFile(str , "/logsAula.txt");
-  Serial.println("ler arquivo");
-  String test = readFile("/logsAula.txt");
-
+  String s = readFile("/ledState.txt");
+  oldLedVal = s.toInt();
+  digitalWrite(LED, oldLedVal);
 }
 
 void loop() {
-
+  botaoVal = !digitalRead(botao);
+  if (botaoVal == 1 && botaoVal != oldVal ) {
+    ledVal = (ledVal == LOW ? HIGH : LOW);
+    digitalWrite(LED, ledVal);
+    delay(50);
+  }
+  oldVal = botaoVal;
+  delay(100);
+  str = String(ledVal);
+  writeFile(str, "/ledState.txt");
 }
