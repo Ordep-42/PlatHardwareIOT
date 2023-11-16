@@ -158,7 +158,7 @@ void testFileIO(fs::FS &fs, const char * path){
 }
 
 void setup(){
-    Serial.begin(115200);
+    Serial.begin(962100);
     if(!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED)){
         Serial.println("SPIFFS Mount Failed");
         return;

@@ -8,8 +8,8 @@
 #define LED 2
 #define botao 4
 
-const char *ssid = "";
-const char *password = "";
+const char *ssid = "nome-da-rede";
+const char *password = "senha-da-rede";
 
 String str;
 String s;
@@ -78,7 +78,8 @@ void setup()
 {
   pinMode(botao, INPUT_PULLUP);
   pinMode(LED, OUTPUT);
-  Serial.begin(115200);
+  Serial.begin(921600);
+
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)
   {
@@ -87,16 +88,17 @@ void setup()
   }
   Serial.println("Conectado"); /* Conectado */
   delay(200);
+
   ntp.begin();       /* Inicia o protocolo */
   ntp.forceUpdate(); /* Atualização */
   ntp.setTimeOffset(-10800);
-  formatFile();
+  // formatFile();
+
   openFS();
   String s = readFile("/ledState.txt");
   oldLedVal = s.toInt();
   digitalWrite(LED, oldLedVal);
 }
-
 
 void loop()
 {

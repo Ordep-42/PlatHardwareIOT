@@ -1,4 +1,4 @@
-//Inclui as bibliotecas do SPI e do RC522
+#include <Arduino.h>
 #include <SPI.h>
 #include <MFRC522.h>
 
