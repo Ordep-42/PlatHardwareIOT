@@ -1,20 +1,14 @@
-#include <Arduino.h>
-#include <Adafruit_Sensor.h>
-#include <DHT.h>
-#include <DHT_U.h>
-
-#define DHTPIN 13
-#define DHTTYPE DHT11
-#define HIGROMETRO 12
-#define BOMBA 2
-#define LDR 14
+#include "config.h"
 
 int higroVal = 0;
 int higroValMapped = 0;
 int LDRVal = 0;
 int LDRValMapped = 0;
+int bombaVal = 0;
 sensors_event_t eventTemp;
 sensors_event_t eventHum;
+float tempVal;
+float humVal;
 
 DHT_Unified dht(DHTPIN, DHTTYPE);
 
@@ -40,8 +34,9 @@ void readValues()
   }
   //Ler temperatura
   dht.temperature().getEvent(&eventTemp);
-  //Ler umidade
+  tempVal = eventTemp.temperature;
   dht.humidity().getEvent(&eventHum);
+  humVal = eventHum.relative_humidity;
 }
 
 void printValues(){
@@ -53,11 +48,50 @@ Serial.println("---------------------");
   Serial.print(higroValMapped);
   Serial.println("%");
   Serial.print(F("Temperature: "));
-  Serial.print(eventTemp.temperature);
+  Serial.print(tempVal);
   Serial.println(F("°C"));
   Serial.print(F("Humidity: "));
-  Serial.print(eventHum.relative_humidity);
+  Serial.print(humVal);
   Serial.println(F("%"));
+}
+
+void connectWiFi() {
+  Serial.print("Conectando à rede WiFi .. ");
+
+  unsigned long tempoInicial = millis();
+  while (WiFi.status() != WL_CONNECTED && (millis() - tempoInicial < wifi_timeout)) {
+    Serial.print(".");
+    delay(100);
+  }
+  Serial.println();
+
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Conexão com WiFi falhou!");
+  } else {
+    Serial.print("Conectado com o IP: ");
+    Serial.println(WiFi.localIP());
+  }
+}
+
+void connectMQTT() {
+  unsigned long tempoInicial = millis();
+  while (!mqtt_client.connected() && (millis() - tempoInicial < mqtt_timeout)) {
+    if (WiFi.status() != WL_CONNECTED) {
+      connectWiFi();
+    }
+    Serial.print("Conectando ao MQTT Broker..");
+
+    if (mqtt_client.connect("ESP32Client", mqtt_usernameAdafruitIO, mqtt_keyAdafruitIO)) {
+      Serial.println();
+      Serial.print("Conectado ao broker MQTT!");
+      mqtt_client.subscribe("Ordep_1/feeds/bomba");
+    } else {
+      Serial.println();
+      Serial.print("Conexão com o broker MQTT falhou!");
+      delay(500);
+    }
+  }
+  Serial.println();
 }
 
 void setup()
@@ -67,19 +101,37 @@ void setup()
   pinMode(HIGROMETRO, INPUT);
   pinMode(BOMBA, OUTPUT);
   dht.begin();
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(wifi_ssid, wifi_password);
+  connectWiFi();
+  mqtt_client.setServer(mqtt_broker, mqtt_port);
 }
 
 void loop()
 {
-  delay(1000);
-  readValues();
-  printValues();
-  if (higroValMapped <= 30)
-  {
-    digitalWrite(BOMBA, HIGH);
+  if (!mqtt_client.connected()) { // Se MQTT não estiver conectado
+    connectMQTT();
   }
-  else if (higroValMapped > 70)
-  {
-    digitalWrite(BOMBA, LOW);
+
+  if (mqtt_client.connected()) {
+    readValues(); 
+    if (higroValMapped <= 30)
+    {
+      bombaVal = 1;
+    }
+    else if (higroValMapped > 70)
+    {
+      bombaVal = 0;
+    }
+    digitalWrite(BOMBA, bombaVal);
+    printValues();
+    mqtt_client.publish("Ordep_1/feeds/LDR", String(LDRValMapped).c_str());
+    mqtt_client.publish("Ordep_1/feeds/higrometro", String(higroValMapped).c_str());
+    mqtt_client.publish("Ordep_1/feeds/temperatura", String(tempVal).c_str());
+    mqtt_client.publish("Ordep_1/feeds/umidade-do-ar", String(humVal).c_str());
+    mqtt_client.publish("Ordep_1/feeds/bomba", String(bombaVal).c_str());
+    Serial.println("Publicou o dadopassou");
+    delay(60000);
+    mqtt_client.loop();
   }
 }
