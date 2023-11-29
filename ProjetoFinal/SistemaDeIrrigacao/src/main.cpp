@@ -5,12 +5,8 @@ int higroValMapped = 0;
 int LDRVal = 0;
 int LDRValMapped = 0;
 int bombaVal = 0;
-sensors_event_t eventTemp;
-sensors_event_t eventHum;
 float tempVal;
 float humVal;
-
-DHT_Unified dht(DHTPIN, DHTTYPE);
 
 void readValues()
 {
@@ -32,11 +28,6 @@ void readValues()
   {
     LDRValMapped = 100;
   }
-  //Ler temperatura
-  dht.temperature().getEvent(&eventTemp);
-  tempVal = eventTemp.temperature;
-  dht.humidity().getEvent(&eventHum);
-  humVal = eventHum.relative_humidity;
 }
 
 void printValues(){
@@ -97,9 +88,9 @@ void connectMQTT() {
 void setup()
 {
   Serial.begin(921600);
-  pinMode(LDR, INPUT);
-  pinMode(HIGROMETRO, INPUT);
-  pinMode(BOMBA, OUTPUT);
+  pinMode(LDRPIN, INPUT);
+  pinMode(HIGROMETROPIN, INPUT);
+  pinMode(BOMBAPIN, OUTPUT);
   dht.begin();
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifi_ssid, wifi_password);
@@ -123,7 +114,7 @@ void loop()
     {
       bombaVal = 0;
     }
-    digitalWrite(BOMBA, bombaVal);
+    digitalWrite(BOMBAPIN, bombaVal);
     printValues();
     mqtt_client.publish("Ordep_1/feeds/LDR", String(LDRValMapped).c_str());
     mqtt_client.publish("Ordep_1/feeds/higrometro", String(higroValMapped).c_str());

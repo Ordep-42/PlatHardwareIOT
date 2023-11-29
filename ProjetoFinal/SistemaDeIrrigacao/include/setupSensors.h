@@ -4,12 +4,12 @@
 
 #define DHTPIN 32
 #define DHTTYPE DHT11
-#define HIGROMETRO 35
-#define BOMBA 2
-#define LDR 34
+#define HIGROMETROPIN 35
+#define BOMBAPIN 2
+#define LDRPIN 34
 
-float readTemperature();
-float readHumidity();
+float readDHTTemperature();
+float readDHTHumidity();
 float readBrightness();
 float readMoisture();
 

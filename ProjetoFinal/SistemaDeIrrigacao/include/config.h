@@ -26,4 +26,6 @@ int mqtt_timeout = 10000;
 const char* mqtt_usernameAdafruitIO = "Ordep_1";
 const char* mqtt_keyAdafruitIO = "aio_hhAc04dNXjouL70bVWgoBxB6p2b7";
 
+float fmap(float, long, long, long, long);
+
 #endif
