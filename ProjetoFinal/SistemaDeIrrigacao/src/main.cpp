@@ -1,42 +1,25 @@
 #include "config.h"
 
-int higroVal = 0;
-int higroValMapped = 0;
-int LDRVal = 0;
-int LDRValMapped = 0;
-int bombaVal = 0;
+float higroVal;
+float LDRVal;
 float tempVal;
 float humVal;
 
 void readValues()
 {
-  higroVal = analogRead(HIGROMETRO);
-  higroValMapped = map(higroVal, 2900, 1400, 0, 100);
-
-  if (higroValMapped < 0)
-  {
-    higroValMapped = 0;
-  }
-  else if (higroValMapped > 100)
-  {
-    higroValMapped = 100;
-  }
-
-  LDRVal = analogRead(LDR);
-  LDRValMapped = map(LDRVal, 4095, 500, 0, 100);
-  if (LDRValMapped > 100)
-  {
-    LDRValMapped = 100;
-  }
+  higroVal = readMoisture();
+  LDRVal = readBrightness();
+  tempVal = readDHTTemperature();
+  humVal = readDHTHumidity();
 }
 
 void printValues(){
-Serial.println("---------------------");
+  Serial.println("---------------------");
   Serial.print("LDR: ");
-  Serial.print(LDRValMapped);
+  Serial.print(LDRVal);
   Serial.println("%");
   Serial.print("Higrômetro: ");
-  Serial.print(higroValMapped);
+  Serial.print(higroVal);
   Serial.println("%");
   Serial.print(F("Temperature: "));
   Serial.print(tempVal);
@@ -88,10 +71,8 @@ void connectMQTT() {
 void setup()
 {
   Serial.begin(921600);
-  pinMode(LDRPIN, INPUT);
-  pinMode(HIGROMETROPIN, INPUT);
-  pinMode(BOMBAPIN, OUTPUT);
-  dht.begin();
+  initSensors();
+  initRelay();
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifi_ssid, wifi_password);
   connectWiFi();
@@ -106,21 +87,20 @@ void loop()
 
   if (mqtt_client.connected()) {
     readValues(); 
-    if (higroValMapped <= 30)
+    if (higroVal <= 30)
     {
-      bombaVal = 1;
+      turnOnBomba();
     }
-    else if (higroValMapped > 70)
+    else if (higroVal > 70)
     {
-      bombaVal = 0;
+      turnOffBomba();
     }
-    digitalWrite(BOMBAPIN, bombaVal);
     printValues();
-    mqtt_client.publish("Ordep_1/feeds/LDR", String(LDRValMapped).c_str());
-    mqtt_client.publish("Ordep_1/feeds/higrometro", String(higroValMapped).c_str());
+    mqtt_client.publish("Ordep_1/feeds/LDR", String(LDRVal).c_str());
+    mqtt_client.publish("Ordep_1/feeds/higrometro", String(higroVal).c_str());
     mqtt_client.publish("Ordep_1/feeds/temperatura", String(tempVal).c_str());
     mqtt_client.publish("Ordep_1/feeds/umidade-do-ar", String(humVal).c_str());
-    mqtt_client.publish("Ordep_1/feeds/bomba", String(bombaVal).c_str());
+    //mqtt_client.publish("Ordep_1/feeds/bomba", String(bombaVal).c_str());
     Serial.println("Publicou o dadopassou");
     delay(60000);
     mqtt_client.loop();

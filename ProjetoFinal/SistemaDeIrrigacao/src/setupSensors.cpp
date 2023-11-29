@@ -12,6 +12,7 @@ float readDHTTemperature() {
         float data = event.temperature;
         return data;
     }
+    return NAN;
 }
 
 float readDHTHumidity() {
@@ -23,6 +24,7 @@ float readDHTHumidity() {
         float data = event.relative_humidity;
         return data;
     }
+    return NAN;
 }
 
 float readBrightness() {
@@ -30,8 +32,12 @@ float readBrightness() {
     if (millis() - lastReadTime > readInterval) {
         lastReadTime = millis();
         float data = fmap(analogRead(LDRPIN), 4095, 500, 100, 0);
+        if (data > 100) {
+            data = 100;
+        }
         return data;
     }
+    return NAN;
 }
 
 float readMoisture() {
@@ -39,6 +45,18 @@ float readMoisture() {
     if (millis() - lastReadTime > readInterval) {
         lastReadTime = millis();
         float data = fmap(analogRead(HIGROMETROPIN), 2900, 1400, 100, 0);
+        if (data < 0) {
+            data = 0;
+        } else if (data > 100) {
+            data = 100;
+        }
         return data;
     }
+    return NAN;
+}
+
+void initSensors() {
+    pinMode(HIGROMETROPIN, INPUT);
+    pinMode(LDRPIN, OUTPUT);
+    dht.begin();
 }

@@ -1,16 +1,21 @@
 #ifndef SETUPSENSORS_H
 #define SETUPSENSORS_H
-#include "config.h"
+
+#include <Arduino.h>
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
+#include "fmap.h"
 
 #define DHTPIN 32
 #define DHTTYPE DHT11
 #define HIGROMETROPIN 35
-#define BOMBAPIN 2
 #define LDRPIN 34
 
 float readDHTTemperature();
 float readDHTHumidity();
 float readBrightness();
 float readMoisture();
+void initSensors();
 
 #endif
