@@ -20,3 +20,12 @@ int getHour()
   }
   return timeClient.getHours();
 }
+
+int getMinute()
+{
+  while (!timeClient.update())
+  {
+    timeClient.forceUpdate();
+  }
+  return timeClient.getMinutes();
+}

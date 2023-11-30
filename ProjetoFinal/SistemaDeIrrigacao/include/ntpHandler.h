@@ -12,5 +12,6 @@ extern String timeStamp;
 
 void initNTP();
 int getHour();
+int getMinute();
 
 #endif
