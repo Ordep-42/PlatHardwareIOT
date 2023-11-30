@@ -10,6 +10,7 @@ void setup()
 
 void loop()
 {
+  printValues();
   sensorHandler();
   handleMQTTConnection();
   publishData(readMoisture(), readBrightness(), readDHTTemperature(), readDHTHumidity(), bombaStatus);
