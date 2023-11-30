@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 #include "mqttHandler.h"
-#include "setupSensors.h"
-#include "relayHandler.h"
+#include "sensorHandler.h"
+#include "printValues.h"
 
 #endif
