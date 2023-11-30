@@ -5,30 +5,6 @@ float LDRVal;
 float tempVal;
 float humVal;
 
-void readValues()
-{
-  higroVal = readMoisture();
-  LDRVal = readBrightness();
-  tempVal = readDHTTemperature();
-  humVal = readDHTHumidity();
-}
-
-void printValues(){
-  Serial.println("---------------------");
-  Serial.print("LDR: ");
-  Serial.print(LDRVal);
-  Serial.println("%");
-  Serial.print("Higrômetro: ");
-  Serial.print(higroVal);
-  Serial.println("%");
-  Serial.print(F("Temperature: "));
-  Serial.print(tempVal);
-  Serial.println(F("°C"));
-  Serial.print(F("Humidity: "));
-  Serial.print(humVal);
-  Serial.println(F("%"));
-}
-
 void connectMQTT() {
   unsigned long tempoInicial = millis();
   while (!mqtt_client.connected() && (millis() - tempoInicial < mqtt_timeout)) {
@@ -52,8 +28,7 @@ void connectMQTT() {
 void setup()
 {
   Serial.begin(921600);
-  initSensors();
-  initRelay();
+  initGarden();
   initWiFi();
   mqtt_client.setServer(mqtt_broker, mqtt_port);
 }
@@ -65,15 +40,7 @@ void loop()
   }
 
   if (mqtt_client.connected()) {
-    readValues(); 
-    if (higroVal <= 30)
-    {
-      turnOnBomba();
-    }
-    else if (higroVal > 70)
-    {
-      turnOffBomba();
-    }
+    sensorHandler();
     printValues();
     mqtt_client.publish("Ordep_1/feeds/LDR", String(LDRVal).c_str());
     mqtt_client.publish("Ordep_1/feeds/higrometro", String(higroVal).c_str());
