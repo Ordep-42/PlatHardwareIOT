@@ -21,5 +21,6 @@ void connectMQTT();
 void printConnectedMQTTStatus();
 void printDisconnectedMQTTStatus();
 void handleMQTTConnection();
+void publishData(float higroVal, float LDRVal, float tempVal, float humVal, int bombaStatus);
 
 #endif

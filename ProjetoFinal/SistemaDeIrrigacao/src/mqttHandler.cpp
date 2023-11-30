@@ -46,3 +46,14 @@ void handleMQTTConnection() {
     }
     mqtt_client.loop();
 }
+
+void publishData(float higroVal, float LDRVal, float tempVal, float humVal, int bombaStatus) {
+    if (mqtt_client.connected()) {
+        mqtt_client.publish("Ordep_1/feeds/higrometro", String(higroVal).c_str());
+        mqtt_client.publish("Ordep_1/feeds/LDR", String(LDRVal).c_str());
+        mqtt_client.publish("Ordep_1/feeds/temperatura", String(tempVal).c_str());
+        mqtt_client.publish("Ordep_1/feeds/umidade-do-ar", String(humVal).c_str());
+        mqtt_client.publish("Ordep_1/feeds/bomba", String(bombaStatus).c_str());
+        Serial.println("Dados publicados");
+    }
+}
