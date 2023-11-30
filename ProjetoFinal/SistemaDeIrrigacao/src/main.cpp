@@ -29,24 +29,6 @@ void printValues(){
   Serial.println(F("%"));
 }
 
-void connectWiFi() {
-  Serial.print("Conectando à rede WiFi .. ");
-
-  unsigned long tempoInicial = millis();
-  while (WiFi.status() != WL_CONNECTED && (millis() - tempoInicial < wifi_timeout)) {
-    Serial.print(".");
-    delay(100);
-  }
-  Serial.println();
-
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("Conexão com WiFi falhou!");
-  } else {
-    Serial.print("Conectado com o IP: ");
-    Serial.println(WiFi.localIP());
-  }
-}
-
 void connectMQTT() {
   unsigned long tempoInicial = millis();
   while (!mqtt_client.connected() && (millis() - tempoInicial < mqtt_timeout)) {
@@ -58,7 +40,6 @@ void connectMQTT() {
     if (mqtt_client.connect("ESP32Client", mqtt_usernameAdafruitIO, mqtt_keyAdafruitIO)) {
       Serial.println();
       Serial.print("Conectado ao broker MQTT!");
-      mqtt_client.subscribe("Ordep_1/feeds/bomba");
     } else {
       Serial.println();
       Serial.print("Conexão com o broker MQTT falhou!");
@@ -73,9 +54,7 @@ void setup()
   Serial.begin(921600);
   initSensors();
   initRelay();
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(wifi_ssid, wifi_password);
-  connectWiFi();
+  initWiFi();
   mqtt_client.setServer(mqtt_broker, mqtt_port);
 }
 

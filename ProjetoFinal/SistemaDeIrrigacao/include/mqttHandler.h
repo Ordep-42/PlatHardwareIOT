@@ -13,4 +13,10 @@ extern int mqtt_timeout;
 extern const char* mqtt_usernameAdafruitIO;
 extern const char* mqtt_keyAdafruitIO;
 
+void initMQTT();
+void connectMQTT();
+void printConnectedMQTTStatus();
+void printDisconnectedMQTTStatus();
+
+
 #endif
