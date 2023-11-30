@@ -14,11 +14,12 @@ void initWiFi() {
 }
 
 void connectWiFi() {
-  Serial.print("Conectando à rede WiFi .. ");
+  Serial.println("Conectando à rede WiFi .. ");
 
   unsigned long tempoInicial = millis();
   while (WiFi.status() != WL_CONNECTED && (millis() - tempoInicial < wifi_timeout)) {
-    Serial.print(".");
+    Serial.print("Status: ");
+    Serial.println(WiFi.status());
     delay(100);
   }
   Serial.println();

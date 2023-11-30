@@ -1,6 +1,4 @@
 #include "sensorHandler.h"
-#include "relayHandler.h"
-#include "setupSensors.h"
 
 void initGarden(){
   initRelay();
