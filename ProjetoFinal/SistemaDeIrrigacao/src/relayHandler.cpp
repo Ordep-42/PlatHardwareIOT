@@ -1,5 +1,7 @@
 #include "relayHandler.h"
 
+int bombaStatus = 0;
+
 void initRelay() {
     pinMode(BOMBAPIN, OUTPUT);
 }

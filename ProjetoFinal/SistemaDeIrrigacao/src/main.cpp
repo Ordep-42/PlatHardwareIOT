@@ -10,9 +10,9 @@ void setup()
 
 void loop()
 {
-  printValues();
   sensorHandler();
+  printValues();
   handleMQTTConnection();
   publishData(readMoisture(), readBrightness(), readDHTTemperature(), readDHTHumidity(), bombaStatus);
-  delay(30000);
+  delay(dataRate);
 }

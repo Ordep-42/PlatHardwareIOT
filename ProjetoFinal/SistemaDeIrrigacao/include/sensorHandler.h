@@ -3,12 +3,13 @@
 
 #include "setupSensors.h"
 #include "relayHandler.h"
-#include "ntphandler.h"
+#include "ntpHandler.h"
 
 extern float brightnessMean;
 
 void initGarden();
 void printValues();
+void brightnessMeanCalc();
 void sensorHandler();
 
 #endif

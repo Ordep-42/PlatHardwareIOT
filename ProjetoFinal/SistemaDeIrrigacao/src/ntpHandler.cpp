@@ -1,19 +1,15 @@
-#include "ntphandler.h"
+#include "ntpHandler.h"
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
 
-String formattedDate;
-String dayStamp;
-String timeStamp;
-
 void initNTP()
 {
-  Serial.println("Initializing NTP...");
+  Serial.println("Inicializando NTP...");
   timeClient.begin();
   timeClient.setTimeOffset(-(3*3600));
   timeClient.update();
-  Serial.println("NTP initialized!");
+  Serial.println("NTP inicializado!");
 }
 
 int getHour()

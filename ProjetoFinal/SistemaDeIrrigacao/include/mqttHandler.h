@@ -4,7 +4,7 @@
 #include <PubSubClient.h>
 #include "wifiHandler.h"
 
-#define dataRate 60000
+#define dataRate 30000
 
 extern PubSubClient mqtt_client;
 
