@@ -8,7 +8,7 @@
 extern float brightnessMean;
 
 void initGarden();
-void printValues();
+void printValuesToSerial();
 void brightnessMeanCalc();
 void sensorHandler();
 

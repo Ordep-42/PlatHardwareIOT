@@ -9,7 +9,7 @@ void initGarden()
   initNTP();
 }
 
-void printValues()
+void printValuesToSerial()
 {
 
   float higroVal, LDRVal, tempVal, humVal;
