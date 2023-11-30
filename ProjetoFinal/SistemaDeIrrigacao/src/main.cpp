@@ -30,15 +30,11 @@ void setup()
   Serial.begin(921600);
   initGarden();
   initWiFi();
-  mqtt_client.setServer(mqtt_broker, mqtt_port);
+  initMQTT();
 }
 
 void loop()
 {
-  if (!mqtt_client.connected()) { // Se MQTT não estiver conectado
-    connectMQTT();
-  }
-
   if (mqtt_client.connected()) {
     sensorHandler();
     printValues();

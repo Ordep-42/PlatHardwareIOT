@@ -5,6 +5,8 @@
 
 #define BOMBAPIN 2
 
+extern int bombaStatus;
+
 void initRelay();
 void turnOnBomba();
 void turnOffBomba();
