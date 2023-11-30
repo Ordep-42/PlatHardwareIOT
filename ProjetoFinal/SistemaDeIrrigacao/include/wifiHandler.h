@@ -13,5 +13,10 @@ extern int wifi_timeout;
 
 void initWiFi();
 void connectWiFi();
+void printConnectedWiFiStatus();
+void printDisconnectedWiFiStatus();
+void printWiFiScanStatus(int networksFound);
+void printDiscoveredWiFiNetworks(int networksFound);
+void scanAvailableWiFiNetworks();
 
 #endif
