@@ -1,31 +1,18 @@
 #include "sensorHandler.h"
 
-void initGarden(){
+void initGarden()
+{
   initRelay();
-  initSensors();  
+  initSensors();
+  initNTP();
 }
 
-void printValues(){
-
-  float higroVal, LDRVal, tempVal, humVal;
-  higroVal = readMoisture();
-  LDRVal = readBrightness();
-  tempVal = readDHTTemperature();
-  humVal = readDHTHumidity();
-
-  Serial.println("---------------------");
-  Serial.print("LDR: ");
-  Serial.print(LDRVal);
-  Serial.println("%");
-  Serial.print("Higrômetro: ");
-  Serial.print(higroVal);
-  Serial.println("%");
-  Serial.print(F("Temperature: "));
-  Serial.print(tempVal);
-  Serial.println(F("°C"));
-  Serial.print(F("Humidity: "));
-  Serial.print(humVal);
-  Serial.println(F("%"));
+void BrightnessMeanCalc()
+{
+  if (getHour() >= 6 && getHour() < 18)
+  {
+    brightnessMean = (brightnessMean + readBrightness()) / 2;
+  }
 }
 
 void sensorHandler()
@@ -35,15 +22,23 @@ void sensorHandler()
   LDRVal = readBrightness();
   tempVal = readDHTTemperature();
   humVal = readDHTHumidity();
+  
+  BrightnessMeanCalc();
 
-  if(higroVal < 40)
+  int hour = getHour();
+  int LastWateringHour;
+  int contLastWateringHour = 0;
+
+  if (hour == 0 || hour == 6 || hour == 12 || hour == 18)
   {
-    turnOnBomba();
+    if(higroVal)
+
+    LastWateringHour = hour;
   }
-  else
   {
-    turnOffBomba();
-  }  
+  }
+  
+
 }
 
 /*
@@ -55,12 +50,14 @@ Umidade do ar:
 Umidade do solo:
   Máxima : 100%
   Mínima : 0%
-  Ideal  : ???
+  Ideal  : 60% - 80%
+  Crítico: >30%
+
 
 Luminosidade:
   Máxima : 100%
   Mínima : 0%
-  Ideal  : ???
+  Ideal  : <30%
 
 Temperatura:
   Máxima : 40ºC
