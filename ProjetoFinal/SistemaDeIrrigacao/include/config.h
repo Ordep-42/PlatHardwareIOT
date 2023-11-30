@@ -3,5 +3,6 @@
 
 #include "mqttHandler.h"
 #include "sensorHandler.h"
+#include "oledHandler.h"
 
 #endif
