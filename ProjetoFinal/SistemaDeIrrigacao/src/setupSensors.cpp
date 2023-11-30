@@ -57,6 +57,6 @@ float readMoisture() {
 
 void initSensors() {
     pinMode(HIGROMETROPIN, INPUT);
-    pinMode(LDRPIN, OUTPUT);
+    pinMode(LDRPIN, INPUT);
     dht.begin();
 }

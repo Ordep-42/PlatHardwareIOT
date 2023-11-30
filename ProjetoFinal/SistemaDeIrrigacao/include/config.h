@@ -3,6 +3,5 @@
 
 #include "mqttHandler.h"
 #include "sensorHandler.h"
-#include "printValues.h"
 
 #endif
