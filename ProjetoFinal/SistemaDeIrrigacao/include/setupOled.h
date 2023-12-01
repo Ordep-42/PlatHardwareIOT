@@ -20,7 +20,7 @@
 extern Adafruit_SSD1306 display;
 
 void initOLED();
-void drawBitmap();
+void drawBitmap(const unsigned char *bitmap, int width, int height, int x, int y);
 void printToOLED(String text, int x, int y, int size);
 
 #endif

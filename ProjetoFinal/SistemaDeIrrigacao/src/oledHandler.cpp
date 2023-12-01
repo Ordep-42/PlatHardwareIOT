@@ -2,13 +2,29 @@
 
 void printTimeToOled(int x, int y, int size)
 {
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(x, y);
-  display.print("Hora: ");
-  display.print(getHour());
-  display.print(":");
-  display.print(getMinute());
-  display.display();
+  printToOLED(String(getHour()) + ":" + String(getMinute()), x, y, size);
+}
+
+void printMoistureToOled(int x, int y, int size) {
+  // Fazer o bitmap pra icone de umidade do solo e implementar aqui
+}
+
+void printBrightnessToOled(int x, int y, int size) {
+  // Fazer o bitmap pra icone de luminosidade e implementar aqui
+}
+
+void printTemperatureToOled(int x, int y, int size) {
+  // Fazer o bitmap pra icone de temperatura e implementar aqui
+}
+
+void printHumidityToOled(int x, int y, int size) {
+  // Fazer o bitmap pra icone de umidade e implementar aqui
+}
+
+void printBombaStatusToOled(int x, int y, int size) {
+  // Fazer o bitmap pra icone de bomba ligada e desligada e implementar aqui
+}
+
+void oledHandler() {
+  // Mudar cada tela a cada x minutos
 }
