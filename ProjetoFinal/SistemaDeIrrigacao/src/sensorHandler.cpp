@@ -83,10 +83,10 @@ void sensorHandler()
   unsigned long int minutes = milis / 60000;
   unsigned long int lastBombaTime = 0;
   // Quero testar na prática pra ver se ele vai conseguir ler o tempo certo, se não, vou ter que usar o millisecond direto sepa, ai é meio merda
-  // Se a bomba ta ligada, vê se passou 15m
+  // Se a bomba ta ligada, vê se passou 5m
   if (bombaStatus)
   {
-    if (lastBombaTime - minutes > 15)
+    if (minutes - lastBombaTime > 5)
     {
       turnOffBomba();
       flagEstaAgoando = 0;
@@ -118,8 +118,6 @@ void sensorHandler()
         {
           regar();
         }
-
-        
       }
     }
   }
