@@ -19,7 +19,7 @@ void regar()
   turnOnBomba();
 }
 
-void printValues()
+void printValuesToSerial()
 {
 
   float higroVal, LDRVal, tempVal, humVal;
