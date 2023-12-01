@@ -1,6 +1,8 @@
 #include "sensorHandler.h"
 
 float brightnessMean = 0;
+int flagEstaAgoando = 0;
+int contLastWateredTime = 0;
 
 void initGarden()
 {
@@ -9,7 +11,15 @@ void initGarden()
   initNTP();
 }
 
-void printValuesToSerial()
+void regar()
+{
+  Serial.println("Regando...");
+  flagEstaAgoando = 1;
+  contLastWateredTime = 0;
+  turnOnBomba();
+}
+
+void printValues()
 {
 
   float higroVal, LDRVal, tempVal, humVal;
@@ -34,7 +44,9 @@ void printValuesToSerial()
   if (brightnessMean < 50)
   {
     Serial.println("O dia está com uma boa luminosidade!");
-  } else {
+  }
+  else
+  {
     Serial.println("O dia está com uma baixa luminosidade!");
   }
 }
@@ -47,25 +59,69 @@ void brightnessMeanCalc()
   }
 }
 
-void sensorHandler()
+// NOTA IMPORTANTE: Ainda tem que melhorar isso aqui, n sei se ta 100% a lógica mas acho q ta no caminho certo
+
+void sensorHandler() 
 {
   float higroVal, LDRVal, tempVal, humVal;
-  higroVal = readMoisture();
+
+  // Na prática não vai ter pra que criar uma lógica com a luminosidade
   LDRVal = readBrightness();
-  tempVal = readDHTTemperature();
-  humVal = readDHTHumidity();
-  
+
+  // Então criei pelo menos uma função pra calcular a media da luminosidade, se tiver num nivel razoavel ele diz e tals
   brightnessMeanCalc();
 
+  // Esses tem que usar mesmo
+  higroVal = readMoisture();
+  tempVal = readDHTTemperature();
+  humVal = readDHTHumidity();
+
   int hour = getHour();
-  int LastWateringHour;
-  int contLastWateringHour = 0;
 
-  if (hour == 0 || hour == 6 || hour == 12 || hour == 18)
+  // Pegando aqui os minutos
+  unsigned long int milis = millis();
+  unsigned long int minutes = milis / 60000;
+  unsigned long int lastBombaTime = 0;
+  // Quero testar na prática pra ver se ele vai conseguir ler o tempo certo, se não, vou ter que usar o millisecond direto sepa, ai é meio merda
+  // Se a bomba ta ligada, vê se passou 15m
+  if (bombaStatus)
   {
-    if(higroVal)
+    if (lastBombaTime - minutes > 15)
+    {
+      turnOffBomba();
+      flagEstaAgoando = 0;
+    }
+    lastBombaTime = minutes;
+  }
+  // Se não, vê se ta em um horário de regar, ai é pra chegar as condições de temperatura, umidade do ar e do solo pra decidir se rega ou não
+  else
+  {
+    if (contLastWateredTime > 3)
+    {
+      contLastWateredTime = 0;
+      regar();
+    }
+    else
+    {
+      if (hour == 0 || hour == 6 || hour == 12 || hour == 18 && flagEstaAgoando == 0)
+      {
+        contLastWateredTime++;
+        if (higroVal < 30)
+        {
+          regar();
+        }
+        else if (tempVal > 30 && higroVal < 60)
+        {
+          regar();
+        }
+        else if (tempVal > 30 && humVal < 40)
+        {
+          regar();
+        }
 
-    LastWateringHour = hour;
+        
+      }
+    }
   }
 }
 
