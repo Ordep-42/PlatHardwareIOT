@@ -5,10 +5,10 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 
+#include "secureKeys.h"
+
 extern WiFiClient wifi_client;
 
-extern const char* wifi_ssid;
-extern const char* wifi_password;
 extern int wifi_timeout;
 
 void initWiFi();
