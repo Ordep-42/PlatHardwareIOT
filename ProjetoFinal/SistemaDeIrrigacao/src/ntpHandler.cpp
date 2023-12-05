@@ -7,7 +7,7 @@ void initNTP()
 {
   Serial.println("Inicializando NTP...");
   timeClient.begin();
-  timeClient.setTimeOffset(-(3*3600));
+  timeClient.setTimeOffset(-(3 * 3600));
   timeClient.update();
   Serial.println("NTP inicializado!");
 }
