@@ -1,6 +1,5 @@
 #include "sensorHandler.h"
 
-#define WATERINGDELAY 300000
 
 float brightnessMean = 0;
 int flagEstaAgoando = 0;
@@ -18,8 +17,6 @@ void regar()
   Serial.println("Regando...");
   contLastWateredTime = 0;
   turnOnBomba();
-  delay(WATERINGDELAY);
-  turnOffBomba();
 }
 
 void printValuesToSerial()
