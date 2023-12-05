@@ -13,4 +13,5 @@ extern String timeStamp;
 void initNTP();
 int getHour();
 
+
 #endif

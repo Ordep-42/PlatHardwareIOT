@@ -1,16 +1,30 @@
 #include "config.h"
 
+void sensorTask()
+{
+  sensorHandler();
+}
+
+Task t1(WateringRate, TASK_FOREVER, &sensorTask);
+
+Scheduler runner;
+
 void setup()
 {
   Serial.begin(115200);
   initWiFi();
   initGarden();
   initMQTT();
+  runner.init();
+  runner.addTask(t1);
+  t1.enable();
 }
 
 void loop()
 {
-  //sensorHandler();
+
+  runner.execute();
+
   printValuesToSerial();
   handleMQTTConnection();
   publishData(readMoisture(), readBrightness(), readDHTTemperature(), readDHTHumidity(), bombaStatus);
