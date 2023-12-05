@@ -61,23 +61,23 @@ void brightnessMeanCalc()
   }
 }
 
-// NOTA IMPORTANTE: Ainda tem que melhorar isso aqui, n sei se ta 100% a lógica mas acho q ta no caminho certo
 
 void sensorHandler()
 {
   float higroVal, tempVal, humVal;
   contLastWateredTime++;
 
-  // Esses tem que usar mesmo
+  // Pegando valores dos sensores
   higroVal = readMoisture();
   tempVal = readDHTTemperature();
   humVal = readDHTHumidity();
 
+  // Se passou mais de 24 horas desde a última rega, rega
   if (contLastWateredTime > 3)
   {
     regar();
   }
-  else
+  else // Se não, verifica se precisa regar
   {
     if (higroVal < 30 || tempVal > 33 || humVal < 30 || (tempVal >= 28 && higroVal < 45) || (tempVal > 30 && humVal < 40) || (higroVal < 45 && humVal < 40))
     {
@@ -108,9 +108,4 @@ Temperatura:
   Máxima : 40ºC
   Mínima : 20ºC
   Ideal  : 25ºC - 30ºC
-
-
-
-
-
 */
