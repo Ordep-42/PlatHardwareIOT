@@ -1,13 +1,16 @@
 #include "config.h"
 
+void sensorTask();
+
+Task t1(WateringRate, TASK_FOREVER, &sensorTask);
+Scheduler runner;
+
 void sensorTask()
 {
   sensorHandler();
+  t1.delay(WATERINGDELAY);
+  turnOffBomba();
 }
-
-Task t1(WateringRate, TASK_FOREVER, &sensorTask);
-
-Scheduler runner;
 
 void setup()
 {
