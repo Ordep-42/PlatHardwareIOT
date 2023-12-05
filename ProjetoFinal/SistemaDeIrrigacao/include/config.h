@@ -4,4 +4,6 @@
 #include "mqttHandler.h"
 #include "sensorHandler.h"
 
+#define dataRate 20000
+
 #endif

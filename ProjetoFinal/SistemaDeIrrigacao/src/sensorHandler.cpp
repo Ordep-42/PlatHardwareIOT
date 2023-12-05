@@ -29,7 +29,6 @@ void printValuesToSerial()
   humVal = readDHTHumidity();
 
   Serial.println("---------------------");
-  Serial.println("%");
   Serial.print("Higrômetro: ");
   Serial.print(higroVal);
   Serial.println("%");

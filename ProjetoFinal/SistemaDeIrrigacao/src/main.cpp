@@ -2,15 +2,15 @@
 
 void setup()
 {
-  Serial.begin(921600);
-  initGarden();
+  Serial.begin(115200);
   initWiFi();
+  initGarden();
   initMQTT();
 }
 
 void loop()
 {
-  sensorHandler();
+  //sensorHandler();
   printValuesToSerial();
   handleMQTTConnection();
   publishData(readMoisture(), readBrightness(), readDHTTemperature(), readDHTHumidity(), bombaStatus);
