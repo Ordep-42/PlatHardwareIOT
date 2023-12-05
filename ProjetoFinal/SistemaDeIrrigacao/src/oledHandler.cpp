@@ -26,5 +26,6 @@ void printBombaStatusToOled(int x, int y, int size) {
 }
 
 void oledHandler() {
+  printTimeToOled(103, 0, 1);
   // Mudar cada tela a cada x minutos
 }
