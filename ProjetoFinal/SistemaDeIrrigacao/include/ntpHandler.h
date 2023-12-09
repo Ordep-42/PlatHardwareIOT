@@ -14,4 +14,5 @@ void initNTP();
 int getHour();
 int getMinute();
 
+
 #endif

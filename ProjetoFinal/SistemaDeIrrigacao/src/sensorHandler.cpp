@@ -1,5 +1,6 @@
 #include "sensorHandler.h"
 
+
 float brightnessMean = 0;
 int flagEstaAgoando = 0;
 int contLastWateredTime = 0;
@@ -14,7 +15,6 @@ void initGarden()
 void regar()
 {
   Serial.println("Regando...");
-  flagEstaAgoando = 1;
   contLastWateredTime = 0;
   turnOnBomba();
 }
@@ -29,7 +29,6 @@ void printValuesToSerial()
   humVal = readDHTHumidity();
 
   Serial.println("---------------------");
-  Serial.println("%");
   Serial.print("Higrômetro: ");
   Serial.print(higroVal);
   Serial.println("%");
@@ -59,66 +58,27 @@ void brightnessMeanCalc()
   }
 }
 
-// NOTA IMPORTANTE: Ainda tem que melhorar isso aqui, n sei se ta 100% a lógica mas acho q ta no caminho certo
 
-void sensorHandler() 
+void sensorHandler()
 {
-  float higroVal, LDRVal, tempVal, humVal;
+  float higroVal, tempVal, humVal;
+  contLastWateredTime++;
 
-  // Na prática não vai ter pra que criar uma lógica com a luminosidade
-  LDRVal = readBrightness();
-
-  // Então criei pelo menos uma função pra calcular a media da luminosidade, se tiver num nivel razoavel ele diz e tals
-  brightnessMeanCalc();
-
-  // Esses tem que usar mesmo
+  // Pegando valores dos sensores
   higroVal = readMoisture();
   tempVal = readDHTTemperature();
   humVal = readDHTHumidity();
 
-  int hour = getHour();
-
-  // Pegando aqui os minutos
-  unsigned long int milis = millis();
-  unsigned long int minutes = milis / 60000;
-  unsigned long int lastBombaTime = 0;
-  // Quero testar na prática pra ver se ele vai conseguir ler o tempo certo, se não, vou ter que usar o millisecond direto sepa, ai é meio merda
-  // Se a bomba ta ligada, vê se passou 5m
-  if (bombaStatus)
+  // Se passou mais de 24 horas desde a última rega, rega
+  if (contLastWateredTime > 3)
   {
-    if (minutes - lastBombaTime > 5)
-    {
-      turnOffBomba();
-      flagEstaAgoando = 0;
-    }
-    lastBombaTime = minutes;
+    regar();
   }
-  // Se não, vê se ta em um horário de regar, ai é pra chegar as condições de temperatura, umidade do ar e do solo pra decidir se rega ou não
-  else
+  else // Se não, verifica se precisa regar
   {
-    if (contLastWateredTime > 3)
+    if (higroVal < 30 || tempVal > 33 || humVal < 30 || (tempVal >= 28 && higroVal < 45) || (tempVal > 30 && humVal < 40) || (higroVal < 45 && humVal < 40))
     {
-      contLastWateredTime = 0;
       regar();
-    }
-    else
-    {
-      if (hour == 0 || hour == 6 || hour == 12 || hour == 18 && flagEstaAgoando == 0)
-      {
-        contLastWateredTime++;
-        if (higroVal < 30)
-        {
-          regar();
-        }
-        else if (tempVal > 30 && higroVal < 60)
-        {
-          regar();
-        }
-        else if (tempVal > 30 && humVal < 40)
-        {
-          regar();
-        }
-      }
     }
   }
 }
@@ -145,9 +105,4 @@ Temperatura:
   Máxima : 40ºC
   Mínima : 20ºC
   Ideal  : 25ºC - 30ºC
-
-
-
-
-
 */
