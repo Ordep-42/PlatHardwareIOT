@@ -3,6 +3,7 @@
 void sensorTask();
 
 Task t1(WateringRate, TASK_FOREVER, &sensorTask);
+Task t2(1, TASK_FOREVER, &oledHandler);
 Scheduler runner;
 
 void sensorTask()
@@ -20,7 +21,9 @@ void setup()
   initMQTT();
   runner.init();
   runner.addTask(t1);
+  runner.addTask(t2);
   t1.enable();
+  t2.enable();
 }
 
 void loop()
