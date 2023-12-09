@@ -15,8 +15,9 @@ void initOLED()
   display.setCursor((128 - 9*12) / 2, SCREEN_HEIGHT - (7*2));
   display.println("PIPI POPO");
   display.display();
-  drawBitmap(logo, LOGO_WIDTH, LOGO_HEIGHT, (display.width()  - LOGO_WIDTH ) / 2, 0);
+  drawBitmap(logo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH  - LOGO_WIDTH ) / 2, 0);
   delay(LOGO_TIME);
+  display.clearDisplay();
 }
 
 void drawBitmap(const unsigned char *bitmap, int width, int height, int x, int y)
@@ -27,7 +28,6 @@ void drawBitmap(const unsigned char *bitmap, int width, int height, int x, int y
 
 void printToOLED(String text, int x, int y, int size) {
 	display.setTextSize(size);
-	display.setTextColor(WHITE);
 	display.setCursor(x, y);
 	display.println(text);
 	display.display();
