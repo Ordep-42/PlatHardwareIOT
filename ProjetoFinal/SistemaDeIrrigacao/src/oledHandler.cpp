@@ -39,15 +39,19 @@ void updateOled() {
     
     switch (displayState) {
       case 0:
+        display.clearDisplay();
         printHumidityToOled();
         break;
       case 1:
+        display.clearDisplay();
         printTemperatureToOled();
         break;
       case 2:
+        display.clearDisplay();
         printBrightnessToOled();
         break;
       case 3:
+        display.clearDisplay();
         printMoistureToOled();
         break;
     }
