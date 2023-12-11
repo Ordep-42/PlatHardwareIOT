@@ -5,34 +5,42 @@ int displayState = 0;
 
 void printTimeToOled(int x, int y, int size)
 {
+  Serial.println("Printing time to OLED");
   printToOLED(String(getHour()) + ":" + String(getMinute()), x, y, size);
 }
 
 void printMoistureToOled() {
+  Serial.println("Printing moisture to OLED");
   String data = String(readMoisture());
-  drawBitmap(moistureLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - 50 - LOGO_WIDTH ) / 2, 0);
-  printToOLED(data, (SCREEN_WIDTH - 50 - sizeof(data)*12) / 2, SCREEN_HEIGHT - (7*2), 2);
+  data = data + "%";
+  drawBitmap(moistureLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
+  printToOLED(data, (SCREEN_WIDTH - data.length()*5*2) / 2, SCREEN_HEIGHT - (7*2), 2);
 }
 
 void printBrightnessToOled() {
+  Serial.println("Printing brightness to OLED");
   String data = String(readBrightness());
-  drawBitmap(brightnessLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - 50 - LOGO_WIDTH ) / 2, 0);
-  printToOLED(data, (SCREEN_WIDTH - 50 - sizeof(data)*12) / 2, SCREEN_HEIGHT - (7*2), 2);
+  data = data + "%";
+  drawBitmap(brightnessLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
+  printToOLED(data, (SCREEN_WIDTH - data.length()*5*2) / 2, SCREEN_HEIGHT - (7*2), 2);
 }
 
 void printTemperatureToOled() {
+  Serial.println("Printing temperature to OLED");
   String data = String(readDHTTemperature());
-  drawBitmap(temperatureLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - 50 - LOGO_WIDTH ) / 2, 0);
-  printToOLED(data, (SCREEN_WIDTH - 50 - sizeof(data)*12) / 2, SCREEN_HEIGHT - (7*2), 2);
+  drawBitmap(temperatureLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
+  printToOLED(data, (SCREEN_WIDTH - data.length()*5*2) / 2, SCREEN_HEIGHT - (7*2), 2);
 }
 
 void printHumidityToOled() {
+  Serial.println("Printing humidity to OLED");
   String data = String(readDHTHumidity());
-  drawBitmap(humidityLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - 50 - LOGO_WIDTH ) / 2, 0);
-  printToOLED(data, (SCREEN_WIDTH - 50 - sizeof(data)*12) / 2, SCREEN_HEIGHT - (7*2), 2);
+  drawBitmap(humidityLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
+  printToOLED(data, (SCREEN_WIDTH - data.length()*5*2) / 2, SCREEN_HEIGHT - (7*2), 2);
 }
 
 void updateOled() {
+  Serial.println("Updating OLED");
   if (millis() - lastChange >= SCREEN_TIME) {
     lastChange = millis();
     displayState = (displayState + 1) % 4;
@@ -59,6 +67,7 @@ void updateOled() {
 }
 
 void oledHandler() {
-  printTimeToOled(SCREEN_WIDTH - 50, 0, 2);
+  //printTimeToOled(SCREEN_WIDTH - 50, 0, 2);
+  Serial.println("OLED Handler");
   updateOled();
 }

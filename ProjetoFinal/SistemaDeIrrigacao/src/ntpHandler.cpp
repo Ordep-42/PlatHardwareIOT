@@ -14,18 +14,20 @@ void initNTP()
 
 int getHour()
 {
-  while (!timeClient.update())
+  /*while (!timeClient.update())
   {
     timeClient.forceUpdate();
-  }
+  }*/
+  timeClient.update();
   return timeClient.getHours();
 }
 
 int getMinute()
 {
-  while (!timeClient.update())
+  /*while (!timeClient.update())
   {
     timeClient.forceUpdate();
-  }
+  }*/
+  timeClient.update();
   return timeClient.getMinutes();
 }
