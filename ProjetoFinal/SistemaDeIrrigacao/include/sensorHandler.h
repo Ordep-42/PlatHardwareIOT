@@ -4,9 +4,6 @@
 #include <Arduino.h>
 #include "setupSensors.h"
 #include "relayHandler.h"
-#include "ntpHandler.h"
-
-extern float brightnessMean;
 
 void initGarden();
 void printValuesToSerial();
