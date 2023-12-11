@@ -2,7 +2,6 @@
 #define OLEDHANDLER_H
 
 #include "setupOled.h"
-#include "ntpHandler.h"
 #include "setupSensors.h"
 
 extern unsigned long lastChange;
