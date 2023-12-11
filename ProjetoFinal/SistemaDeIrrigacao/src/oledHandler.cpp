@@ -3,14 +3,7 @@
 unsigned long lastChange = 0;
 int displayState = 0;
 
-void printTimeToOled(int x, int y, int size)
-{
-  Serial.println("Printing time to OLED");
-  printToOLED(String(getHour()) + ":" + String(getMinute()), x, y, size);
-}
-
 void printMoistureToOled() {
-  Serial.println("Printing moisture to OLED");
   String data = String(readMoisture());
   data = data + "%";
   drawBitmap(moistureLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
@@ -18,7 +11,6 @@ void printMoistureToOled() {
 }
 
 void printBrightnessToOled() {
-  Serial.println("Printing brightness to OLED");
   String data = String(readBrightness());
   data = data + "%";
   drawBitmap(brightnessLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
@@ -26,21 +18,18 @@ void printBrightnessToOled() {
 }
 
 void printTemperatureToOled() {
-  Serial.println("Printing temperature to OLED");
   String data = String(readDHTTemperature());
   drawBitmap(temperatureLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
   printToOLED(data, (SCREEN_WIDTH - data.length()*5*2) / 2, SCREEN_HEIGHT - (7*2), 2);
 }
 
 void printHumidityToOled() {
-  Serial.println("Printing humidity to OLED");
   String data = String(readDHTHumidity());
   drawBitmap(humidityLogo, LOGO_WIDTH, LOGO_HEIGHT, (SCREEN_WIDTH - LOGO_WIDTH ) / 2, 0);
   printToOLED(data, (SCREEN_WIDTH - data.length()*5*2) / 2, SCREEN_HEIGHT - (7*2), 2);
 }
 
 void updateOled() {
-  Serial.println("Updating OLED");
   if (millis() - lastChange >= SCREEN_TIME) {
     lastChange = millis();
     displayState = (displayState + 1) % 4;
