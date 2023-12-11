@@ -1,7 +1,5 @@
 #include "sensorHandler.h"
 
-
-float brightnessMean = 0;
 int flagEstaAgoando = 0;
 int contLastWateredTime = 0;
 
@@ -9,7 +7,6 @@ void initGarden()
 {
   initRelay();
   initSensors();
-  initNTP();
 }
 
 void regar()
@@ -40,23 +37,8 @@ void printValuesToSerial()
   Serial.println(F("%"));
   Serial.print("LDR: ");
   Serial.println(LDRVal);
-  if (brightnessMean < 50)
-  {
-    Serial.println("O dia está com uma boa luminosidade!");
-  }
-  else
-  {
-    Serial.println("O dia está com uma baixa luminosidade!");
-  }
 }
 
-void brightnessMeanCalc()
-{
-  if (getHour() >= 6 && getHour() < 18)
-  {
-    brightnessMean = (brightnessMean + readBrightness()) / 2;
-  }
-}
 
 
 void sensorHandler()
