@@ -7,6 +7,8 @@
 extern unsigned long lastChange;
 extern int displayState;
 
+#define displayTime 20000
+
 void printMoistureToOled();
 void printBrightnessToOled();
 void printTemperatureToOled();

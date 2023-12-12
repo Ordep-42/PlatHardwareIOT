@@ -30,7 +30,7 @@ void printHumidityToOled() {
 }
 
 void updateOled() {
-  if (millis() - lastChange >= dataRate) {
+  if (millis() - lastChange >= displayTime) {
     lastChange = millis();
     displayState = (displayState + 1) % 4;
     
